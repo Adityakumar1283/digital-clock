@@ -1,52 +1,63 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
-import './App.css'
+import "./App.css";
 
 function App() {
-  const [clock, setClock] = useState(0)
-
+  const [clock, setClock] = useState(new Date());
+  const requestref = useRef();
   let date = new Date();
 
-  useEffect(()=>{
-    setInterval(()=>{
-      setClock((p) => p+1 )
-    },1000)
-  },[])
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     setClock((p) => p + 1);
+  //   }, 1000);
+  // }, []);
 
-  function getdate(){
-    let result = '';
+  useEffect(() => {
+    requestref.current = requestAnimationFrame(updateclock);
 
-    const date = new Date();
+    return () => cancelAnimationFrame(requestref.current);
+  });
 
-    let hr = date.getHours();
+  // function getdate() {
+  //   let result = "";
 
-    const mm = date.getMinutes().toString().padStart(2,"0");
+  //   const date = new Date();
 
-    const sec = date.getSeconds().toString().padStart(2,"0");
-     
-    let ampm = hr >12 ? "PM": "AM";
+  //   let hr = date.getHours();
 
-    hr = hr % 12 || 12;
-      
+  //   const mm = date.getMinutes().toString().padStart(2, "0");
 
-    return `${hr}:${mm}:${sec} ${ampm}`;
+  //   const sec = date.getSeconds().toString().padStart(2, "0");
 
+  //   let ampm = hr > 12 ? "PM" : "AM";
+
+  //   hr = hr % 12 || 12;
+
+  //   return `${hr}:${mm}:${sec} ${ampm}`;
+  // }
+
+  function updateclock() {
+    setClock(new Date());
+    requestref.current = requestAnimationFrame(updateclock);
   }
 
   return (
     <>
-
       <h1>Digital Clock </h1>
 
-      {// date.toLocaleTimeString()
+      {
+         clock.toLocaleTimeString()
+         
       }
 
-      {getdate()}
-        
-       <div></div>
-        
+
+      { //getdate()
+      }
+
+      
     </>
-  )
+  );
 }
 
-export default App
+export default App;
